@@ -8,5 +8,6 @@
  2、config/db.config.php 填写数据库地址、用户名、密码、库名  
  3、static/sql.rar 解压后，上传数据库  
 # 登录
- 默认用户名admin 密码admin 邮箱admin@admin.com  
+ 默认用户名admin 密码admin 邮箱admin@admin.com    
  总台我设置成一共显示20条，所以不要添加太多。  
+ 第一次写README.md发现换行要用2个空格。。
