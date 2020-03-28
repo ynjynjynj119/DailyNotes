@@ -1,0 +1,7 @@
+<?php $item = apply_filter( 'UI_FEED_ITEM_FILTER' , $item ); ?>
+<li class="<?=feed_class($item['type'])?>" tid="<?=$item['tid']?>" uid="<?=$item['uid']?>" id="fid-<?=$item['id']?>"  >
+<div class="hotarea">
+	<span class="time <?='color'.date("d" , strtotime($item['last_action_at']) )?>"><abbr title="<?=date("Y-m-d H:i:s" , strtotime($item['last_action_at']) )?>"><?=rtime($item['last_action_at'])?></abbr> <?=__('DDONE')?></span>&nbsp;-<?=$item['content'];?> 
+</div>
+</li>
+

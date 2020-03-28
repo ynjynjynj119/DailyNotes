@@ -1,0 +1,35 @@
+<div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner navbar-tt">
+        <div class="container">
+          <div class="mycontainer">
+         <?php if(is_login()): ?>
+          <div >
+            <ul class="nav" id="tt_menu_list">              			
+              <li<?php if( g('c') == 'dashboard' ): ?> class="active"<?php endif; ?>><a href="?c=dashboard">总台</a></li>
+			  <li<?php if( g('c') == 'feed' ): ?> class="active"<?php endif; ?>><a href="?c=feed">记录</a></li>
+			  <?php if( is_admin() ): ?>
+              <li<?php if( g('c') == 'buddy' ): ?> class="active"<?php endif; ?>><a href="?c=buddy">帐号</a></li>	  
+			  <?php endif; ?>
+              <li id="doing_gif"><img src="<?=image('doing.gif')?>"/></li>
+			</ul>
+          </div><!--/.nav-collapse -->
+
+			<div class="btn-group pull-right nav-collapse" id="top_dropdown" >
+			  <button class="btn noblue" id="top_user_name" data-toggle="dropdown"><?=$_SESSION['uname']?></button>
+			  <button class="btn dropdown-toggle" data-toggle="dropdown" id="top_user_menu">
+				<span class="caret"></span>
+			  </button>
+
+			  <ul class="dropdown-menu">
+        <li><a href="javascript:show_float_box( '<?=__('UPDATE_PROFILE')?>' , '?c=dashboard&a=profile' );void(0);"><?=__('UPDATE_PROFILE')?></a></li>
+        <li><a href="javascript:show_float_box( '<?=__('UPDATE_PASSWORD')?>' , '?c=dashboard&a=password' );void(0);"><?=__('UPDATE_PASSWORD')?></a></li>
+        <li class="divider"></li>
+				<li><a href="?c=guest&a=logout"><?=__('LOGOUT')?></a></li>
+			  </ul>
+			</div>
+		<?php endif; ?>
+    </div>
+        </div>
+      </div>
+    </div>
+ 

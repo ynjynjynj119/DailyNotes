@@ -1,0 +1,44 @@
+<?php if( intval($data['details']['status']) <> 3 ): ?>
+<ul class="gbox">
+<?php //var_dump($data);
+
+$time1=date("Y-m-d H:i:s");
+if(strtotime($data['details']['last_action_at'])-strtotime($time1)<0): 
+ //if( intval($data['details']['is_public']) == 1 ): ?>
+	<li class="public"><a href="javascript:void(0);">转明日</a></li>
+<?php else: ?>
+	<li class="private"><a href="javascript:void(0);">转今日</a></li>
+<?php endif; ?>	
+
+<?php if( intval($data['details']['is_star']) == 1 ): ?>
+	<li class="star public"><a href="javascript:void(0);"><?=__('STAR')?></a></li>
+<?php else: ?>
+	<li class="nostar pub"><a href="javascript:void(0);"><?=__('STAR')?></a></li>
+<?php endif; ?>	
+
+</ul>
+<script>bind_gbox( '<?=$data['tid']?>' );</script>
+
+<div class="line"></div>
+
+<h2 class="side_board">笔记</h2>
+<div class="comment_box">
+<form class="form-inline" action="javascript:todo_add_comment( <?=$data['tid']?> , $('#comment_text').val() );void(0);" method="post" id="comment_form">
+<div class="input-append">
+  <input class="side_board_input" id="comment_text" type="text" placeholder="请输入内容">
+  <button class="btn" type="submit"><?=__('SAVE')?></button>
+</div>
+
+</form>	
+</div>
+
+<div class="line"></div>
+<?php endif; ?>	
+
+<ul class="history" id="todo_history">
+<?php if( isset( $data['history'] ) && is_array( $data['history'] ) ):  ?>
+	<?php foreach( $data['history'] as $item ): ?>
+	<?php require( AROOT . 'view' . DS . 'layout' . DS . 'ajax' . DS . 'widget' . DS . 'history.tpl.html' ); ?>
+	<?php endforeach; ?>
+<?php endif; ?>
+</ul>	

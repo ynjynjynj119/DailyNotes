@@ -1,0 +1,28 @@
+<div class="row-fluid">
+<div class="span7">
+	<!-- dropdown menu -->
+	<div  id="todo_mine">
+		<ul id="todo_list_star"></ul>
+		<ul id="todo_list_normal"></ul>
+		<p class="dtitle"><img src="<?=image('tt2.title.done.png');?>" /></p>
+		<ul id="todo_list_done"></ul>
+	</div>
+
+	<script>
+	function loaded()
+	{
+		remember();
+		load_todo('star');
+		load_todo('normal');
+		load_todo('done');
+		
+	}
+	document.addEventListener('DOMContentLoaded', loaded, false);
+
+	</script>
+</div>
+<div class="span5" id="side_board">
+<?php require( AROOT .  'view' . DS . 'layout' . DS .  'ajax' . DS . 'widget' . DS . 'todobox.tpl.html' ); ?>
+</div>
+
+</div>
