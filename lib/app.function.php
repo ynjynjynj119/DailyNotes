@@ -60,7 +60,7 @@ function kdel( $key )
 
 function local_version()
 {
-    return intval(file_get_contents(AROOT.'version.txt'));
+    return 1;//intval(file_get_contents(AROOT.'version.txt'));
 }
 
 function db_init()
@@ -374,24 +374,6 @@ function send_request( $action , $param , $token = null )
     }
    
     return null;
-    
-    
-    // remote request ...........
-    /*
-
-    $url = c('api_server') . '?c=api&a=' . u($action) . '&token=' . u($token) ;
-	
-	if( (is_array( $param )) && (count($param) > 0) )
-		foreach( $param as $key => $value )
-			$url .= '&' . $key . '=' . u( $value );
-	
-	
-
-	if($content = file_get_contents( $url ))
-		return $content;
-	
-	return $url;
-	*/
 }
 
 function find_at( $text )

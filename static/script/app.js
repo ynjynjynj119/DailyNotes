@@ -638,6 +638,16 @@ function bind_follow_todo()
 	});
 }
 
+var count = 0;
+var timer = null;
+var jishu = '000000';
+function showNum(num) {
+    if (num < 10) {
+            return '0' + num;
+    }
+    return num;
+}
+
 function bind_todo()
 {
 	//alert('in');
@@ -645,15 +655,24 @@ function bind_todo()
 	$('li a.todo_play').bind('click' , function(evt)
 	{
 		var mtype;
-
-		if( $(this.parentNode).hasClass('ing') )
-			mtype = 'pause';
-		else
-			mtype = 'start';
+		var tid = $(this).attr('tid');	
 		
-		var tid = $(this).attr('tid');
-		var url = '?c=dashboard&a=todo_start&tid=' + tid + '&type=' + mtype  ;
-	
+		if( $(this.parentNode).hasClass('ing') ){
+			mtype = 'pause';
+			clearInterval(timer);
+			jishu = $('#t-'+tid+' .jishu').html();
+		}else{
+			mtype = 'start';
+			jishu = $('#t-'+tid+' .jishu').html();
+			count = parseInt(jishu.substring(0,2))*60*60 + parseInt(jishu.substring(2,4))*60 + parseInt(jishu.substring(4,6));
+			timer = setInterval(function() {
+                        count++;
+						$('#t-'+tid+' .jishu').html( showNum(parseInt(count / 60 / 60))+showNum(parseInt(count / 60) % 60)+showNum(count % 60) );
+					}, 1000);
+		}
+
+		var url = '?c=dashboard&a=todo_start&tid=' + tid + '&type=' + mtype + "&jishu=" +  jishu;
+
 		var params = {};
 		$.post( url , params , function( data )
 		{
@@ -663,14 +682,12 @@ function bind_todo()
 			{
 				if( mtype == 'pause' )
 				{
-					$('#t-'+tid).removeClass('ing');
-					console.log('remove class');
-				}
+					$('#t-'+tid).removeClass('ing');										
+
+				}else{
 					
-				else
-				{
-					$('#t-'+tid).addClass('ing');
-					console.log('add class');
+					$('#t-'+tid).addClass('ing');					
+
 				}
 					
 				// buddy_click();
@@ -687,6 +704,7 @@ function bind_todo()
 		evt.stopPropagation();
 		
 	});
+
 
 
 

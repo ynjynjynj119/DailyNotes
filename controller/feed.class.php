@@ -46,7 +46,9 @@ class feedController extends appController
 	{
 		
 		$params = array();
-		$params['max_id'] = intval(v('max_id'));
+
+		$params['ord'] = '';
+		$params['by'] = 'last_action_at';//DESC
 		
 		if($content = send_request( 'feed_list' ,  $params , token()  ))
 		{

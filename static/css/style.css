@@ -411,7 +411,20 @@ ul#todo_list_star li .todo_row,ul#todo_list_normal li .todo_row,ul#todo_list_don
 	text-overflow:ellipsis;
 	white-space:nowrap; 
 	overflow:hidden;
-	margin-right:60px;
+	margin-right:100px;
+}
+
+.jishu{
+	position: absolute;
+    top: 0;
+    right: 40px;
+    color: #999;
+    line-height: 30px;
+    font-size: 16px;}
+
+.finished .jishu{
+    color: #dbdbdb!important;
+    text-decoration: line-through;
 }
 
 li a.todo_play
@@ -445,11 +458,8 @@ ul#todo_list_star li a,ul#todo_list_normal li a,ul#todo_list_done li a,ul#todo_l
 	
 	text-decoration:none;
 	color:#5d5d5d;
-	/*text-shadow:2px 2px rgba( 0 , 0 , 0 , 0.1 );
-	font-size:20px;
-	line-height:50px;*/
 	line-height: 30px;
-    font-size: 16px;//////
+    font-size: 16px;
 	
 }
 
@@ -1843,15 +1853,15 @@ div.tagsinput div { display:block; float: left; }
 
 
 
-li span.color1{color: #005580;}
-li span.color2{}
-li span.color3{color: #005580;}
-li span.color4{}
-li span.color5{color: #005580;}
-li span.color6{}
-li span.color7{color: #005580;}
-li span.color8{}
-li span.color9{color: #005580;}
+li span.color01{color: #005580;}
+li span.color02{}
+li span.color03{color: #005580;}
+li span.color04{}
+li span.color05{color: #005580;}
+li span.color06{}
+li span.color07{color: #005580;}
+li span.color08{}
+li span.color09{color: #005580;}
 li span.color10{}
 li span.color11{color: #005580;}
 li span.color12{}

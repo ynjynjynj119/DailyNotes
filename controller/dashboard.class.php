@@ -414,6 +414,7 @@ PRIMARY KEY (  `folder_name` )
 	function todo_start()
 	{
 		$tid = intval(v('tid'));
+		$jishu = v('jishu');
 		if( $tid < 1 ) return render( array( 'code' => 100002 , 'message' => __('INPUT_CHECK_BAD_ARGS' , 'TID' ) ) , 'rest' );
 		
 		if( t(v('type')) == 'pause' ) $action = 'todo_pause';
@@ -421,6 +422,7 @@ PRIMARY KEY (  `folder_name` )
 
 		$params = array();
 		$params['tid'] = $tid;
+		$params['jishu'] = $jishu;
 
 		if($content = send_request( $action ,  $params , token()  ))
 		{
@@ -685,7 +687,7 @@ PRIMARY KEY (  `folder_name` )
 		$params = array();
 		$params['by'] = 'last_action_at';//tid
 		$params['ord'] = 'desc';
-		$params['count'] = '20';//100
+		$params['count'] = '500';//100
 		$params['group'] = '1';
 		
 		

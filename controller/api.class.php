@@ -1162,7 +1162,7 @@ class apiController extends appController
             $osql = '';
         
         if( $count < 1 ) $count = 10;
-        if( $count > 100 ) $count = 100;
+        //if( $count > 100 ) $count = 100;
         
         if( $since_id > 0 )
             $wsql = " AND `tid` > '" . intval( $since_id ) . "' ";
@@ -1201,6 +1201,7 @@ class apiController extends appController
 				$todos[$t['id']]['uid'] = $t['owner_uid'];
 				$todos[$t['id']]['content'] = $t['content'];
 				$todos[$t['id']]['timeline'] = $t['timeline'];
+				$todos[$t['id']]['jishu'] = $t['jishu'];
 			}
 			
 			// todo : sort it 
@@ -1247,75 +1248,7 @@ class apiController extends appController
 			
 	}
 	
-	/**
-     * 获取something列表
-     *
-     *
-     * @param string token , 必填
-     * @param string since_id - 最小TODO id
-     * @param string max_id - 最大TODO id
-     * @param string count - 每页TODO条数
-     * @param string ord - 排序 ， asc 或者 desc
-     * @param string by - 排序字段 
-     * @param string group - 按分组输出，默认为false 
-     * @return todo list array
-     * @author EasyChen
-     */
-	public function something_list()
-	{
-		$uid = $_SESSION['uid'];		
-        $count = intval( v( 'count' ) );
-        $order = strtolower( z( t( v( 'ord' ) ) ) );
-        $by = strtolower( z( t( v( 'by' ) ) ) );
-		$times = strtolower( z( t( v( 'times' ) ) ) );//n0昨天 n1今天 n2明天
-        
-			if( $order != 'desc' ){$ord = ' ASC ';}else{$ord = ' DESC ';}		
-        if( strlen( $by ) > 0 ){
-            $osql = ' ORDER BY `' . s( $by ) . '` ' . $ord . ' ';
-        }else{
-            $osql = '';
-        }
-		
-        if( $count < 1 ) $count = 10;
-        if( $count > 100 ) $count = 100;
-		$lsql = " LIMIT " . $count ;
-		
-        if( $times == 'n0' ){
-            $tsql = ' and TO_DAYS(NOW())-TO_DAYS(`timeline`)=1 ';
-        }elseif( $times == 'n1' ){
-            $tsql = ' and TO_DAYS(`timeline`)=TO_DAYS(NOW()) ';
-        }elseif( $times == 'n2' ){
-			$tsql = ' and TO_DAYS(`timeline`)-TO_DAYS(NOW())=1 ';
-		}else{
-			$tsql = ' and TO_DAYS(NOW())-TO_DAYS(`timeline`)=1 ';
-		}	
-       
 
-	   $sql = "SELECT * FROM `todo_day` WHERE `owner_uid` = '" . intval($uid) . "'";
-	   
-	   $sql = $sql . $tsql . $osql . $lsql ;
-	   
-		
-		if( !$data = get_data( $sql ) ) return self::send_error( LR_API_DB_EMPTY_RESULT , __( 'API_MESSAGE_EMPTY_RESULT_DATA' ) );
-		
-		if( db_errno() != 0 ) return self::send_error(  LR_API_DB_ERROR , __('API_MESSAGE_DATABASE_ERROR')   );
-		
-
-		$ret = Array();
-				
-		foreach( $data as $tt )
-		{
-			if( $tt['status'] == 3 ) 
-				$ret['done'][] = $tt;
-			elseif( $tt['is_star'] == 1 )
-				$ret['star'][] = $tt;
-			else
-				$ret['normal'][] = $tt;
-		}
-				
-		return self::send_result($ret);			
-			
-	}
 	/**
      * TODO进行中
      *
@@ -1331,10 +1264,6 @@ class apiController extends appController
 		return $this->todo_set_value( 'status' , 2 );
 	}
 	
-	public function something_start()
-	{
-		return $this->something_set_value( 'status' , 2 );
-	}	
 	/**
      * TODO暂停
      *
@@ -1346,13 +1275,9 @@ class apiController extends appController
      */
 	public function todo_pause()
 	{
-		return $this->todo_set_value( 'status' , 1 );
+		return $this->todo_set_value( 'status' , 1 , 4);
 	}
-	
-	public function something_pause()
-	{
-		return $this->something_set_value( 'status' , 1 );
-	}	
+		
 		
 	/**
      * TODO加星
@@ -1367,11 +1292,6 @@ class apiController extends appController
 	public function todo_star()
 	{
 		return $this->todo_set_value( 'is_star' , 1 );
-	}
-	
-	public function something_star()
-	{
-		return $this->something_set_value( 'is_star' , 1 );
 	}	
 	
 	/**
@@ -1461,9 +1381,6 @@ class apiController extends appController
 		if( !$data = get_line( $sql ))
 			return self::send_error( LR_API_FORBIDDEN , __('API_MESSAGE_CANNOT_UPDATE_OTHERS_TODO') );
 			
-		// delete uid and limit 1
-		// to make all record updated at sametime
-		// for all the followers 
 		$sql = "UPDATE `todo_user` SET `" . s( $field ) . "` = '" . intval( $value ) . "' , `last_action_at` = NOW() WHERE `tid` = '" . intval( $tid ) . "' ";
 		
 		run_sql( $sql );
@@ -1482,6 +1399,15 @@ if($endcom==2){
 	run_sql( $sql );
 	
 }	
+
+if($endcom==4){
+	
+	$jishu = v('jishu');
+	
+	$sql = "UPDATE `todo` SET `jishu` = '".$jishu."' WHERE `id` = '" . intval($tid) . "' ";
+	run_sql( $sql );
+	
+}
 
 $days=$endcom;//今天8 明天9	
 	
@@ -1523,27 +1449,7 @@ if($days==9){
 		
 			
 	}
-	private function something_set_value( $field , $value )
-	{
-		$tid = intval(v('tid'));		
-		if( $tid < 1 ) return self::send_error( LR_API_ARGS_ERROR , __('INPUT_CHECK_BAD_ARGS','TID') );
-		
-
-		$sql = "UPDATE `todo_day` SET `" . s( $field ) . "` = '" . intval( $value ) . "' WHERE `id` = '" . intval( $tid ) . "' ";
-		
-		run_sql( $sql );
-		
-		if( mysql_errno() != 0 )
-            return self::send_error( LR_API_DB_ERROR , __('API_MESSAGE_DATABASE_ERROR') . mysql_error() );
-        else
-		{
-			$todoinfo = get_something_info_by_id( $tid , true );			
-			return self::send_result( $todoinfo ); 
-
-		}
-		
-			
-	}	
+	
 	/**
      * TODO取消关注
      *
@@ -1997,10 +1903,21 @@ if($days==9){
         $order = strtolower( z( t( v( 'ord' ) ) ) );
         $by = strtolower( z( t( v( 'by' ) ) ) );
 
+        if( $order != 'desc' )
+            $ord = ' ASC ';
+        else
+            $ord = ' DESC ';
+        
+        if( strlen( $by ) > 0 )
+        {
+            $osql = ' ORDER BY `' . s( $by ) . '` ' . $ord . ' ';
+        }
+        else
+            $osql = '';
 
 		//$sql = "SELECT * FROM `feed` WHERE 1 ";
 		$uid = $_SESSION['uid'];
-        $sql = "SELECT * FROM todo_user b,todo a WHERE b.uid = '" . intval($uid) . "' and b.status=3 and b.tid=a.id ORDER BY b.last_action_at DESC";
+        $sql = "SELECT * FROM todo_user b,todo a WHERE b.uid = '" . intval($uid) . "' and b.status=3 and b.tid=a.id ".$osql;
         
 		if( !$data = get_data( $sql ))
 		{
