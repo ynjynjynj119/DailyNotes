@@ -3,6 +3,6 @@
 <?php if( ($item['user']['id'] == uid()) && ($item['type'] == 2) ): ?>
 	<a class="close pull-right hide"  href="javascript:todo_remove_comment(<?=$item['id']?>);">&times;</a>
 <?php endif; ?>		
-	<abbr title="<?=date("Y-m-d H:i:s" , strtotime($item['timeline']) )?>" style="color: #ccc;font-size: 12px;"><?=rtime($item['timeline'])?></abbr><br/>
+	<abbr title="<?=date("Y-m-d H:i:s" , strtotime($item['timeline']) )?>" style="color: #ccc;font-size: 12px;float:right;"><?=rtime($item['timeline'])?></abbr>
 	<?=link_at(replace_links($item['content']))?> 
 </li>
